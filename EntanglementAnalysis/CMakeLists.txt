@@ -10,7 +10,7 @@ cmake_minimum_required(VERSION 2.6)
 
 ################################################################################
 ## Project name
-set(projectName PhysicAnalysis)
+set(projectName EntanglementAnalysis)
 
 ################################################################################
 ## Auxiliary files
@@ -56,8 +56,6 @@ list(APPEND HEADERS ${use_modules_from}/HitFinderTools.h)
 list(APPEND SOURCES ${use_modules_from}/HitFinderTools.cpp)
 list(APPEND HEADERS ${use_modules_from}/EventFinder.h)
 list(APPEND SOURCES ${use_modules_from}/EventFinder.cpp)
-list(APPEND HEADERS ${use_modules_from}/EventCategorizerTools.h)
-list(APPEND SOURCES ${use_modules_from}/EventCategorizerTools.cpp)
 
 ################################################################################
 ## Build definitions and libraries linking

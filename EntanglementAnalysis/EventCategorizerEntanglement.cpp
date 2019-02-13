@@ -10,27 +10,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- *  @file EventCategorizerPhysics.cpp
+ *  @file EventCategorizerEntanglement.cpp
  */
 
 #include "../LargeBarrelAnalysis/EventCategorizerTools.h"
 #include <JPetOptionsTools/JPetOptionsTools.h>
-#include "EventCategorizerPhysics.h"
+#include "EventCategorizerEntanglement.h"
 #include <JPetWriter/JPetWriter.h>
+#include <TMath.h>
+#include <TVector3.h>
 #include <iostream>
 
 using namespace jpet_options_tools;
 
 using namespace std;
 
-EventCategorizerPhysics::EventCategorizerPhysics(const char* name): JPetUserTask(name) {}
+EventCategorizerEntanglement::EventCategorizerEntanglement(const char* name): JPetUserTask(name) {}
 
-bool EventCategorizerPhysics::init()
+bool EventCategorizerEntanglement::init()
 {
   INFO("Physics streaming started.");
 
   fOutputEvents = new JPetTimeWindow("JPetEvent");
 
+  if (isOptionSet(fParams.getOptions(), kScatterTOFTimeDiffParamKey)) {
+    fScatterTOFTimeDiff = getOptionAsFloat(fParams.getOptions(), kScatterTOFTimeDiffParamKey);
+  } else {
+    WARNING(Form("No value of the %s parameter provided by the user. Using default value of %lf.", kScatterTOFTimeDiffParamKey.c_str(), fScatterTOFTimeDiff));
+  }
   if (isOptionSet(fParams.getOptions(), kMinAnnihilationParamKey)) {
     fMinAnnihilationTOT = getOptionAsFloat(fParams.getOptions(), kMinAnnihilationParamKey);
   } else {
@@ -181,11 +188,17 @@ bool EventCategorizerPhysics::init()
     );
     getStatistics().getHisto1D("3AnnihTimeDiff")->SetXTitle("Time difference [ns]");
     getStatistics().getHisto1D("3AnnihTimeDiff")->SetYTitle("Counts");
+
+    getStatistics().createHistogram(
+      new TH1F("PhiAngle", "Angle between scattering planes", 180, 0.0, 180)
+    );
+    getStatistics().getHisto1D("3AnnihTimeDiff")->SetXTitle("#varphi [deg]");
+    getStatistics().getHisto1D("3AnnihTimeDiff")->SetYTitle("Counts");
   }
   return true;
 }
 
-bool EventCategorizerPhysics::exec()
+bool EventCategorizerEntanglement::exec()
 {
   vector<JPetEvent> events;
   if (auto timeWindow = dynamic_cast<const JPetTimeWindow* const>(fEvent)) {
@@ -204,20 +217,20 @@ bool EventCategorizerPhysics::exec()
   return true;
 }
 
-bool EventCategorizerPhysics::terminate()
+bool EventCategorizerEntanglement::terminate()
 {
   INFO("Physics streaming ended.");
   return true;
 }
 
-void EventCategorizerPhysics::saveEvents(const vector<JPetEvent>& events)
+void EventCategorizerEntanglement::saveEvents(const vector<JPetEvent>& events)
 {
   for (const auto& event : events) {
     fOutputEvents->add<JPetEvent>(event);
   }
 }
 
-JPetEvent EventCategorizerPhysics::physicsAnalysis(vector<JPetHit> hits)
+JPetEvent EventCategorizerEntanglement::physicsAnalysis(vector<JPetHit> hits)
 {
   JPetEvent physicEvent;
   JPetEvent annihilationHits;
@@ -230,11 +243,9 @@ JPetEvent EventCategorizerPhysics::physicsAnalysis(vector<JPetHit> hits)
         getStatistics().getHisto1D("AllHitTOT")->Fill(TOTofHit / 1000.);
       }
       if (TOTofHit >= fMinAnnihilationTOT && TOTofHit <= fMaxAnnihilationTOT) {
-        physicEvent.addHit(hits[i]);
         annihilationHits.addHit(hits[i]);
       }
       if (TOTofHit >= fMinDeexcitationTOT && TOTofHit <= fMaxDeexcitationTOT) {
-        physicEvent.addHit(hits[i]);
         deexcitationHits.addHit(hits[i]);
       }
     }
@@ -243,37 +254,94 @@ JPetEvent EventCategorizerPhysics::physicsAnalysis(vector<JPetHit> hits)
     getStatistics().getHisto1D("AnnihHitsNumber")->Fill(annihilationHits.getHits().size());
     getStatistics().getHisto1D("DeexHitsNumber")->Fill(deexcitationHits.getHits().size());
   }
-  if (deexcitationHits.getHits().size() > 0) {
-    if (physicEvent.isOnlyTypeOf(JPetEventType::kUnknown)){
-      physicEvent.setEventType(JPetEventType::kPrompt);
-    } else {
-      physicEvent.addEventType(JPetEventType::kPrompt);
+
+
+  if (annihilationHits.getHits().size() > 3) {
+
+    JPetHit firstHit, secondHit, firstScatter, secondScatter;
+
+    for (uint i = 0; i < annihilationHits.getHits().size(); i++) {
+      for (uint j = i + 1; j < annihilationHits.getHits().size(); j++) {
+        JPetHit firstSuspect, secondSuspect;
+        if (annihilationHits.getHits().at(i).getTime() < annihilationHits.getHits().at(j).getTime()) {
+          firstSuspect = annihilationHits.getHits().at(i);
+          secondSuspect = annihilationHits.getHits().at(j);
+        }
+        else {
+          firstSuspect = annihilationHits.getHits().at(j);
+          secondSuspect = annihilationHits.getHits().at(i);
+        }
+
+        // Checking for back to back
+        double thetaDiff = fabs(firstHit.getBarrelSlot().getTheta() - secondSuspect.getBarrelSlot().getTheta());
+        double minTheta = 180.0 - fBackToBackAngleWindow;
+        double maxTheta = 180.0 + fBackToBackAngleWindow;
+        if (thetaDiff > minTheta && thetaDiff < maxTheta) {
+          if (fSaveControlHistos) {
+            double distance = EventCategorizerTools::calculateDistance(secondSuspect, firstSuspect);
+            TVector3 annhilationPoint = EventCategorizerTools::calculateAnnihilationPoint(firstSuspect, secondSuspect);
+            getStatistics().getHisto1D("2Gamma_Zpos")->Fill(firstSuspect.getPosZ());
+            getStatistics().getHisto1D("2Gamma_Zpos")->Fill(secondSuspect.getPosZ());
+            getStatistics().getHisto1D("2Gamma_TimeDiff")->Fill(secondSuspect.getTime() - firstSuspect.getTime());
+            getStatistics().getHisto1D("2Gamma_Dist")->Fill(distance);
+            getStatistics().getHisto1D("Annih_TOF")->Fill(EventCategorizerTools::calculateTOF(firstSuspect, secondSuspect));
+            getStatistics().getHisto2D("AnnihPoint_XY")->Fill(annhilationPoint.X(), annhilationPoint.Y());
+            getStatistics().getHisto2D("AnnihPoint_XZ")->Fill(annhilationPoint.X(), annhilationPoint.Z());
+            getStatistics().getHisto2D("AnnihPoint_YZ")->Fill(annhilationPoint.Y(), annhilationPoint.Z());
+          }
+          firstHit = firstSuspect;
+          secondHit = secondSuspect;
+          physicEvent.addHit(firstHit);
+          physicEvent.addHit(secondHit);
+
+          annihilationHits.removeHitAtPosition(int(j));
+          annihilationHits.removeHitAtPosition(int(i));
+        }
+      }
     }
-    if (annihilationHits.getHits().size() > 0) {
-      getStatistics().getHisto1D("DeexAnnihTimeDiff")->Fill(
-        annihilationHits.getHits().at(0).getTime() - deexcitationHits.getHits().at(0).getTime()
-      );
+
+    for(int i=0; i<annihilationHits.getHits().size(); i++){
+      double DeltaFirst, DeltaSecond;
+
+      DeltaFirst = EventCategorizerTools::calculateTOF(firstHit, annihilationHits.getHits().at(i)) - EventCategorizerTools::calculateScatteringTime(firstHit, annihilationHits.getHits().at(i));
+      DeltaSecond = EventCategorizerTools::calculateTOF(secondHit, annihilationHits.getHits().at(i)) - EventCategorizerTools::calculateScatteringTime(secondHit, annihilationHits.getHits().at(i));
+
+      if(fabs(DeltaFirst) < 0.5){
+        firstScatter = annihilationHits.getHits().at(i);
+        physicEvent.addHit(firstScatter);
+      }
+      if(fabs(DeltaSecond) < 0.5){
+        secondScatter = annihilationHits.getHits().at(i);
+        physicEvent.addHit(secondScatter);
+      }
+
     }
+
+    if(physicEvent.getHits().size() == 4){
+      TVector3 AnnihilationPoint = EventCategorizerTools::calculateAnnihilationPoint(firstHit, secondHit);
+
+      TVector3 FirstMomentum = firstHit.getPos() - AnnihilationPoint;
+      TVector3 SecondMomentum = secondHit.getPos() - AnnihilationPoint;
+      TVector3 FirstScatteredMomentum = firstScatter.getPos() - firstHit.getPos();
+      TVector3 SecondScatteredMomentum = secondScatter.getPos() - secondHit.getPos();
+
+      double Theta1 = EventCategorizerTools::calculateScatteringAngle(firstHit, firstScatter);
+      double Theta2 = EventCategorizerTools::calculateScatteringAngle(secondHit, secondScatter);
+
+      TVector3 Orthogonal1 = FirstMomentum.Cross(FirstScatteredMomentum);
+      TVector3 Orthogonal2 = SecondMomentum.Cross(SecondScatteredMomentum);
+
+      double AngleBetweenPlanes = 180*(Orthogonal1.Angle(Orthogonal2))/TMath::Pi();
+
+      getStatistics().getHisto1D("PhiAngle")->Fill(AngleBetweenPlanes);
+    }
+
+
+
+
   }
-  if (EventCategorizerTools::stream2Gamma(
-    annihilationHits, getStatistics(), fSaveControlHistos,
-    fBackToBackAngleWindow, fMaxTimeDiff)
-  ) {
-    if (physicEvent.isOnlyTypeOf(JPetEventType::kUnknown)) {
-      physicEvent.setEventType(JPetEventType::k2Gamma);
-    } else {
-      physicEvent.addEventType(JPetEventType::k2Gamma);
-    }
-  }
-  if (EventCategorizerTools::stream3Gamma(
-    annihilationHits, getStatistics(), fSaveControlHistos,
-    fDecayInto3MinAngle, fMaxTimeDiff, fMaxDistOfDecayPlaneFromCenter)
-  ) {
-    if (physicEvent.isOnlyTypeOf(JPetEventType::kUnknown)){
-      physicEvent.setEventType(JPetEventType::k3Gamma);
-    } else {
-      physicEvent.addEventType(JPetEventType::k3Gamma);
-    }
-  }
+
+
+
   return physicEvent;
 }

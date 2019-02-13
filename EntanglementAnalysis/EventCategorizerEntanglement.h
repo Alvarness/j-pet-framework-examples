@@ -10,11 +10,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- *  @file EventCategorizerPhysics.h
+ *  @file EventCategorizerEntanglement.h
  */
 
-#ifndef EVENTCATEGORIZERPHYSICS_H
-#define EVENTCATEGORIZERPHYSICS_H
+#ifndef EVENTCATEGORIZERENTANGLEMENT_H
+#define EVENTCATEGORIZERENTANGLEMENT_H
 
 #include <JPetStatistics/JPetStatistics.h>
 #include <JPetUserTask/JPetUserTask.h>
@@ -30,16 +30,17 @@ class JPetWriter;
 #	define override
 #endif
 
-class EventCategorizerPhysics : public JPetUserTask{
+class EventCategorizerEntanglement : public JPetUserTask{
 public:
-	EventCategorizerPhysics(const char * name);
-	virtual ~EventCategorizerPhysics(){}
+	EventCategorizerEntanglement(const char * name);
+	virtual ~EventCategorizerEntanglement(){}
 	virtual bool init() override;
 	virtual bool exec() override;
 	virtual bool terminate() override;
 	JPetEvent physicsAnalysis(std::vector<JPetHit> hits);
 
 protected:
+	const std::string kScatterTOFTimeDiffParamKey = "Scatter_Categorizer_TOF_TimeDiff_float";
 	const std::string kMaxDistOfDecayPlaneFromCenterParamKey = "EventCategorizer_MaxDistOfDecayPlaneFromCenter_float";
 	const std::string kBackToBackAngleWindowParamKey = "EventCategorizer_BackToBackAngleWindow_float";
 	const std::string kDecayInto3MinAngleParamKey = "EventCategorizer_DecayInto3MinAngle_float";
@@ -49,6 +50,7 @@ protected:
 	const std::string kMaxDeexcitationParamKey = "EventCategorizer_MaxDeexcitationTOT_float";
 	const std::string kMaxTimeDiffParamKey = "EventCategorizer_MaxTimeDiff_float";
 	const std::string kMaxZPosParamKey = "EventCategorizer_MaxHitZPos_float";
+	double fScatterTOFTimeDiff = 2000.0;
 	double fMaxDistOfDecayPlaneFromCenter = 5.;
 	double fMinAnnihilationTOT = 10000.0;
 	double fMaxAnnihilationTOT = 25000.0;
@@ -62,4 +64,4 @@ protected:
 	void saveEvents(const std::vector<JPetEvent>& event);
 };
 
-#endif /* !EVENTCATEGORIZERPHYSICS_H */
+#endif /* !EVENTCATEGORIZERENTANGLEMENT_H */
