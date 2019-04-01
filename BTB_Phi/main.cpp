@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2017 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -13,19 +13,17 @@
  *  @file main.cpp
  */
 
+#include "../LargeBarrelAnalysis/EventCategorizer.h"
+#include "../LargeBarrelAnalysis/EventFinder.h"
+#include "../LargeBarrelAnalysis/HitFinder.h"
+#include "../LargeBarrelAnalysis/SignalFinder.h"
+#include "../LargeBarrelAnalysis/SignalTransformer.h"
+#include "../LargeBarrelAnalysis/TimeWindowCreator.h"
 #include <JPetManager/JPetManager.h>
-#include "TimeWindowCreator.h"
-#include "SignalTransformer.h"
-#include "EventCategorizer.h"
-#include "SignalFinder.h"
-#include "EventFinder.h"
-#include "HitFinder.h"
-
 using namespace std;
 
 int main(int argc, const char* argv[]) {
   try {
-
     JPetManager& manager = JPetManager::getManager();
 
     manager.registerTask<TimeWindowCreator>("TimeWindowCreator");
@@ -33,12 +31,14 @@ int main(int argc, const char* argv[]) {
     manager.registerTask<SignalTransformer>("SignalTransformer");
     manager.registerTask<HitFinder>("HitFinder");
     manager.registerTask<EventFinder>("EventFinder");
+    manager.registerTask<EventCategorizer>("EventCategorizer");
 
-    manager.useTask("TimeWindowCreator", "hld", "tslot.calib");
-    manager.useTask("SignalFinder", "tslot.calib", "raw.sig");
-    manager.useTask("SignalTransformer", "raw.sig", "phys.sig");
-    manager.useTask("HitFinder", "phys.sig", "hits");
-    manager.useTask("EventFinder", "hits", "unk.evt");
+//    manager.useTask("TimeWindowCreator", "hld", "tslot.calib");
+//    manager.useTask("SignalFinder", "tslot.calib", "raw.sig");
+//    manager.useTask("SignalTransformer", "raw.sig", "phys.sig");
+//    manager.useTask("HitFinder", "phys.sig", "hits");
+//    manager.useTask("EventFinder", "hits", "unk.evt");
+    manager.useTask("EventCategorizer", "unk.evt", "cat.evt");
 
     manager.run(argc, argv);
   } catch (const std::exception& except) {

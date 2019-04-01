@@ -50,9 +50,12 @@ protected:
 	const std::string kMaxDeexcitationParamKey = "EventCategorizer_MaxDeexcitationTOT_float";
 	const std::string kMaxTimeDiffParamKey = "EventCategorizer_MaxTimeDiff_float";
 	const std::string kMaxZPosParamKey = "EventCategorizer_MaxHitZPos_float";
+	const std::string kMaxXYAnnihilationPointDistanceFromCenter = "EventCategorizer_MaxXYAnnihilationPointDistanceFromCenter_float";
+
+	double fMaxXYAnnihilationPointDistanceFromCenter = 5.0;
 	double fScatterTOFTimeDiff = 2000.0;
 	double fMaxDistOfDecayPlaneFromCenter = 5.;
-	double fMinAnnihilationTOT = 10000.0;
+	double fMinAnnihilationTOT = 1000.0;
 	double fMaxAnnihilationTOT = 25000.0;
 	double fMinDeexcitationTOT = 30000.0;
 	double fMaxDeexcitationTOT = 50000.0;
@@ -61,6 +64,7 @@ protected:
 	double fMaxTimeDiff = 1000.;
 	double fMaxZPos = 23.;
 	bool fSaveControlHistos = true;
+
 	void saveEvents(const std::vector<JPetEvent>& event);
 };
 

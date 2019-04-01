@@ -38,7 +38,9 @@ public:
                              bool saveHistos, double deexTOTCutMin, double deexTOTCutMax);
   static bool checkForScatter(const JPetEvent& event, JPetStatistics& stats,
                               bool saveHistos, double scatterTOFTimeDiff);
+  static bool elipseCut(double xPos, double yPos, double xElCenter, double yElCenter, double xR, double yR, double theta);
   static double calculateTOT(const JPetHit& hit);
+  static double calculateTOTold(const JPetHit& hit);
   static double calculateDistance(const JPetHit& hit1, const JPetHit& hit2);
   static double calculateScatteringTime(const JPetHit& hit1, const JPetHit& hit2);
   static double calculateScatteringAngle(const JPetHit& hit1, const JPetHit& hit2);

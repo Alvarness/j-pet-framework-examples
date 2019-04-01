@@ -43,18 +43,6 @@ bool EventCategorizerTools::checkFor2Gamma(const JPetEvent& event, JPetStatistic
       double minTheta = 180.0 - b2bSlotThetaDiff;
       double maxTheta = 180.0 + b2bSlotThetaDiff;
       if (thetaDiff > minTheta && thetaDiff < maxTheta) {
-        if (saveHistos) {
-          double distance = calculateDistance(secondHit, firstHit);
-          TVector3 annhilationPoint = calculateAnnihilationPoint(firstHit, secondHit);
-          stats.getHisto1D("2Gamma_Zpos")->Fill(firstHit.getPosZ());
-          stats.getHisto1D("2Gamma_Zpos")->Fill(secondHit.getPosZ());
-          stats.getHisto1D("2Gamma_TimeDiff")->Fill(secondHit.getTime() - firstHit.getTime());
-          stats.getHisto1D("2Gamma_Dist")->Fill(distance);
-          stats.getHisto1D("Annih_TOF")->Fill(calculateTOF(firstHit, secondHit));
-          stats.getHisto2D("AnnihPoint_XY")->Fill(annhilationPoint.X(), annhilationPoint.Y());
-          stats.getHisto2D("AnnihPoint_XZ")->Fill(annhilationPoint.X(), annhilationPoint.Z());
-          stats.getHisto2D("AnnihPoint_YZ")->Fill(annhilationPoint.Y(), annhilationPoint.Z());
-        }
         return true;
       }
     }
@@ -89,9 +77,6 @@ bool EventCategorizerTools::checkFor3Gamma(const JPetEvent& event, JPetStatistic
         double transformedX = relativeAngles.at(1) + relativeAngles.at(0);
         double transformedY = relativeAngles.at(1) - relativeAngles.at(0);
 
-        if (saveHistos) {
-          stats.getHisto2D("3Gamma_Angles")->Fill(transformedX, transformedY);
-        }
       }
     }
   }
@@ -108,9 +93,6 @@ bool EventCategorizerTools::checkForPrompt(
   for (unsigned i = 0; i < event.getHits().size(); i++) {
     double tot = calculateTOT(event.getHits().at(i));
     if (tot > deexTOTCutMin && tot < deexTOTCutMax) {
-      if (saveHistos) {
-        stats.getHisto1D("Deex_TOT_cut")->Fill(tot);
-      }
       return true;
     }
   }
@@ -147,15 +129,76 @@ bool EventCategorizerTools::checkForScatter(
       }
 
       if (fabs(scattTOF - timeDiff) < scatterTOFTimeDiff) {
-        if (saveHistos) {
-          stats.getHisto2D("ScatterAngle_PrimaryTOT")->Fill(scattAngle, calculateTOT(primaryHit));
-          stats.getHisto2D("ScatterAngle_ScatterTOT")->Fill(scattAngle, calculateTOT(scatterHit));
-        }
         return true;
       }
     }
   }
   return false;
+}
+
+bool EventCategorizerTools::elipseCut(double xPos, double yPos, double xElCenter, double yElCenter, double xR, double yR, double theta){
+  double A = pow( ((xPos - xElCenter)*cos(theta) + (yPos - yElCenter)*sin(theta))/xR ,2);
+  double B = pow( ((xPos - xElCenter)*sin(theta) - (yPos - yElCenter)*cos(theta))/yR ,2);
+
+  if(A + B < 1) return true;
+  else return false;
+}
+/**
+* Calculation of the total TOT of the hit - Time over Threshold:
+* the sum of the TOTs on all of the thresholds (1-4) and on the both sides (A,B)
+*/
+double EventCategorizerTools::calculateTOTold(const JPetHit& hit)
+{
+  double tot = 0.0;
+
+  auto sigALead = hit.getSignalA().getRecoSignal().getRawSignal()
+                  .getPoints(JPetSigCh::Leading, JPetRawSignal::ByThrNum);
+  auto sigBLead = hit.getSignalB().getRecoSignal().getRawSignal()
+                  .getPoints(JPetSigCh::Leading, JPetRawSignal::ByThrNum);
+  auto sigATrail = hit.getSignalA().getRecoSignal().getRawSignal()
+                   .getPoints(JPetSigCh::Trailing, JPetRawSignal::ByThrNum);
+  auto sigBTrail = hit.getSignalB().getRecoSignal().getRawSignal()
+                   .getPoints(JPetSigCh::Trailing, JPetRawSignal::ByThrNum);
+
+  if (sigALead.size() > 0 && sigATrail.size() > 0) {
+    for (unsigned i = 0; i < sigALead.size() && i < sigATrail.size(); i++) {
+      switch( i )
+      {
+        case 0:
+          tot += (sigATrail.at(i).getValue() - sigALead.at(i).getValue()) * 3.0/11.0;
+          break;
+        case 1:
+          tot += (sigATrail.at(i).getValue() - sigALead.at(i).getValue()) * 5.0/11.0;
+          break;
+        case 2:
+          tot += (sigATrail.at(i).getValue() - sigALead.at(i).getValue());
+          break;
+        case 3:
+          tot += (sigATrail.at(i).getValue() - sigALead.at(i).getValue());
+          break;
+      }
+    }
+  }
+  if (sigBLead.size() > 0 && sigBTrail.size() > 0) {
+    for (unsigned i = 0; i < sigBLead.size() && i < sigBTrail.size(); i++) {
+      switch( i )
+      {
+        case 0:
+          tot += (sigBTrail.at(i).getValue() - sigBLead.at(i).getValue()) * 3.0/11.0;
+          break;
+        case 1:
+          tot += (sigBTrail.at(i).getValue() - sigBLead.at(i).getValue()) * 50.0/11.0;
+          break;
+        case 2:
+          tot += (sigBTrail.at(i).getValue() - sigBLead.at(i).getValue());
+          break;
+        case 3:
+          tot += (sigBTrail.at(i).getValue() - sigBLead.at(i).getValue());
+          break;
+      }
+    }
+  }
+  return tot;
 }
 
 /**
@@ -300,20 +343,7 @@ bool EventCategorizerTools::stream2Gamma(
       double theta1 = min(firstHit.getBarrelSlot().getTheta(), secondHit.getBarrelSlot().getTheta());
       double theta2 = max(firstHit.getBarrelSlot().getTheta(), secondHit.getBarrelSlot().getTheta());
       double thetaDiff = min(theta2 - theta1, 360.0 - theta2 + theta1);
-      if (saveHistos) {
-        stats.getHisto1D("2Gamma_TimeDiff")->Fill(timeDiff / 1000.0);
-        stats.getHisto1D("2Gamma_DLOR")->Fill(deltaLor);
-        stats.getHisto1D("2Gamma_ThetaDiff")->Fill(thetaDiff);
-      }
       if (fabs(thetaDiff - 180.0) < b2bSlotThetaDiff && timeDiff < b2bTimeDiff) {
-        if (saveHistos) {
-          TVector3 annhilationPoint = calculateAnnihilationPoint(firstHit, secondHit);
-          stats.getHisto1D("2Annih_TimeDiff")->Fill(timeDiff / 1000.0);
-          stats.getHisto1D("2Annih_DLOR")->Fill(deltaLor);
-          stats.getHisto1D("2Annih_ThetaDiff")->Fill(thetaDiff);
-          stats.getHisto2D("2Annih_XY")->Fill(annhilationPoint.X(), annhilationPoint.Y());
-          stats.getHisto1D("2Annih_Z")->Fill(annhilationPoint.Z());
-        }
         return true;
       }
     }
@@ -355,16 +385,7 @@ bool EventCategorizerTools::stream3Gamma(
         double transformedY = relativeAngles.at(1) - relativeAngles.at(0);
         double timeDiff = fabs(thirdHit.getTime() - firstHit.getTime());
         double planeCenterDist = calculatePlaneCenterDistance(firstHit, secondHit, thirdHit);
-        if (saveHistos) {
-          stats.getHisto1D("3GammaTimeDiff")->Fill(timeDiff);
-          stats.getHisto2D("3GammaThetas")->Fill(transformedX, transformedY);
-          stats.getHisto1D("3GammaPlaneDist")->Fill(planeCenterDist);
-        }
         if (transformedX > d3SlotThetaMin && timeDiff < d3TimeDiff && planeCenterDist < d3PlaneCenterDist) {
-          if (saveHistos) {
-            stats.getHisto1D("3AnnihPlaneDist")->Fill(planeCenterDist);
-            stats.getHisto1D("3AnnihTimeDiff")->Fill(timeDiff);
-          }
           return true;
         }
       }

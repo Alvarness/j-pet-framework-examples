@@ -13,11 +13,6 @@
  *  @file main.cpp
  */
 
-// #include "../LargeBarrelAnalysis/TimeWindowCreator.h"
-// #include "../LargeBarrelAnalysis/SignalTransformer.h"
-// #include "../LargeBarrelAnalysis/SignalFinder.h"
-// #include "../LargeBarrelAnalysis/EventFinder.h"
-// #include "../LargeBarrelAnalysis/HitFinder.h"
 #include <JPetManager/JPetManager.h>
 #include "EventCategorizerEntanglement.h"
 
@@ -28,19 +23,8 @@ int main(int argc, const char* argv[])
   try {
     JPetManager& manager = JPetManager::getManager();
 
-    // manager.registerTask<TimeWindowCreator>("TimeWindowCreator");
-    // manager.registerTask<SignalFinder>("SignalFinder");
-    // manager.registerTask<SignalTransformer>("SignalTransformer");
-    // manager.registerTask<HitFinder>("HitFinder");
-    // manager.registerTask<EventFinder>("EventFinder");
     manager.registerTask<EventCategorizerEntanglement>("EventCategorizerEntanglement");
-    // manager.registerTask<EntanglementAnalysis>("EntanglementAnalysis");
 
-    // manager.useTask("TimeWindowCreator", "hld", "tslot.calib");
-    // manager.useTask("SignalFinder", "tslot.calib", "raw.sig");
-    // manager.useTask("SignalTransformer", "raw.sig", "phys.sig");
-    // manager.useTask("HitFinder", "phys.sig", "hits");
-    // manager.useTask("EventFinder", "hits", "unk.evt");
     manager.useTask("EventCategorizerEntanglement", "unk.evt", "ent.evt");
 
 
