@@ -203,46 +203,59 @@ bool EventCategorizerEntanglement::init()
     getStatistics().getHisto2D("DeltaVsDelta")->SetYTitle("#Delta_{2,i} [ns]");
 
     getStatistics().createHistogram(
-      new TH1F("ComptonAngles", "Compton scattering angles", 180, 0.0, 180)
+      new TH1F("ComptonAnglesBig", "Compton scattering angles", 180, 0.0, 180)
     );
-    getStatistics().getHisto1D("ComptonAngles")->SetXTitle("#varphi [deg]");
-    getStatistics().getHisto1D("ComptonAngles")->SetYTitle("Counts");
+    getStatistics().getHisto1D("ComptonAnglesBig")->SetXTitle("#varphi [deg]");
+    getStatistics().getHisto1D("ComptonAnglesBig")->SetYTitle("Counts");
 
     getStatistics().createHistogram(
-      new TH1F("PhiAngle", "Angle between scattering planes", 180, 0.0, 180)
+      new TH1F("ComptonAnglesSmall", "Compton scattering angles", 180, 0.0, 180)
     );
-    getStatistics().getHisto1D("PhiAngle")->SetXTitle("#varphi [deg]");
-    getStatistics().getHisto1D("PhiAngle")->SetYTitle("Counts");
+    getStatistics().getHisto1D("ComptonAnglesSmall")->SetXTitle("#varphi [deg]");
+    getStatistics().getHisto1D("ComptonAnglesSmall")->SetYTitle("Counts");
 
     getStatistics().createHistogram(
-      new TH1F("PhiAngleR10", "Angle between scattering planes around center (R < 10#circ)", 180, 0.0, 180)
+      new TH1F("PhiAngleBig", "Angle between scattering planes", 180, 0.0, 180)
     );
-    getStatistics().getHisto1D("PhiAngleR10")->SetXTitle("#varphi [deg]");
-    getStatistics().getHisto1D("PhiAngleR10")->SetYTitle("Counts");
+    getStatistics().getHisto1D("PhiAngleBig")->SetXTitle("#varphi [deg]");
+    getStatistics().getHisto1D("PhiAngleBig")->SetYTitle("Counts");
 
     getStatistics().createHistogram(
-      new TH1F("PhiAngleR15", "Angle between scattering planes around center (R < 15#circ)", 180, 0.0, 180)
+      new TH1F("PhiAngleR10Big", "Angle between scattering planes around center (R < 10#circ)", 180, 0.0, 180)
     );
-    getStatistics().getHisto1D("PhiAngleR15")->SetXTitle("#varphi [deg]");
-    getStatistics().getHisto1D("PhiAngleR15")->SetYTitle("Counts");
+    getStatistics().getHisto1D("PhiAngleR10Big")->SetXTitle("#varphi [deg]");
+    getStatistics().getHisto1D("PhiAngleR10Big")->SetYTitle("Counts");
 
     getStatistics().createHistogram(
-      new TH1F("PhiAngleR20", "Angle between scattering planes around center (R < 20#circ)", 180, 0.0, 180)
+      new TH1F("PhiAngleR15Big", "Angle between scattering planes around center (R < 15#circ)", 180, 0.0, 180)
     );
-    getStatistics().getHisto1D("PhiAngleR20")->SetXTitle("#varphi [deg]");
-    getStatistics().getHisto1D("PhiAngleR20")->SetYTitle("Counts");
+    getStatistics().getHisto1D("PhiAngleR15Big")->SetXTitle("#varphi [deg]");
+    getStatistics().getHisto1D("PhiAngleR15Big")->SetYTitle("Counts");
 
     getStatistics().createHistogram(
-      new TH1F("PhiAngleR30", "Angle between scattering planes around center (R < 30#circ)", 180, 0.0, 180)
+      new TH1F("PhiAngleR20Big", "Angle between scattering planes around center (R < 20#circ)", 180, 0.0, 180)
     );
-    getStatistics().getHisto1D("PhiAngleR30")->SetXTitle("#varphi [deg]");
-    getStatistics().getHisto1D("PhiAngleR30")->SetYTitle("Counts");
+    getStatistics().getHisto1D("PhiAngleR20Big")->SetXTitle("#varphi [deg]");
+    getStatistics().getHisto1D("PhiAngleR20Big")->SetYTitle("Counts");
 
     getStatistics().createHistogram(
-      new TH2F("ThetaVsTheta", "ThetaVsTheta", 201, -0.5, 200.5, 201, -0.5, 200.5)
+      new TH1F("PhiAngleR30Big", "Angle between scattering planes around center (R < 30#circ)", 180, 0.0, 180)
     );
-    getStatistics().getHisto2D("ThetaVsTheta")->SetXTitle("First photon Compton scattering angle [deg]");
-    getStatistics().getHisto2D("ThetaVsTheta")->SetYTitle("Second photon Compton scattering angle [deg]");
+    getStatistics().getHisto1D("PhiAngleR30Big")->SetXTitle("#varphi [deg]");
+    getStatistics().getHisto1D("PhiAngleR30Big")->SetYTitle("Counts");
+
+    getStatistics().createHistogram(
+      new TH2F("ThetaVsThetaBig", "ThetaVsTheta", 201, -0.5, 200.5, 201, -0.5, 200.5)
+    );
+    getStatistics().getHisto2D("ThetaVsThetaBig")->SetXTitle("First photon Compton scattering angle [deg]");
+    getStatistics().getHisto2D("ThetaVsThetaBig")->SetYTitle("Second photon Compton scattering angle [deg]");
+
+    getStatistics().createHistogram(
+      new TH2F("ThetaVsThetaSmall", "ThetaVsTheta", 201, -0.5, 200.5, 201, -0.5, 200.5)
+    );
+    getStatistics().getHisto2D("ThetaVsThetaSmall")->SetXTitle("First photon Compton scattering angle [deg]");
+    getStatistics().getHisto2D("ThetaVsThetaSmall")->SetYTitle("Second photon Compton scattering angle [deg]");
+
 
     getStatistics().createHistogram(
       new TH2F("2Gamma_ThetaDiff3DAcos_ZcutVsID", "2 Gamma Hits angles vs LayerIDs", 250, 160, 185, 9, 0.5, 9.5)
@@ -251,26 +264,61 @@ bool EventCategorizerEntanglement::init()
     getStatistics().getHisto2D("2Gamma_ThetaDiff3DAcos_ZcutVsID")->SetYTitle("FirstHitLaterID * SecondHitLayerID");
 
 
-    for(int first = 1; first < 4; first++){
-      for(int second = 1; second < 4; second++){
-        const char* histo_name = Form("DeltaVsDelta%i%i", first, second);
-
-        getStatistics().createHistogram(
-          new TH2F(histo_name, Form("#Delta_{1,i} Vs #Delta_{2,i}, Layer %i and %i", first, second), 120, -6, 6, 120, -6, 6)
-        );
-        getStatistics().getHisto2D(histo_name)->SetXTitle("#Delta_{1,i} [ns]");
-        getStatistics().getHisto2D(histo_name)->SetYTitle("#Delta_{2,i} [ns]");
-
-      }
-    }
 
     getStatistics().createHistogram(
-      new TH2F("DeltaVsDeltaAfterCut", "#Delta_{1,i} Vs #Delta_{2,i} after cut", 120, -6, 6, 120, -6, 6)
+      new TH2F("DeltaVsDeltaAfterCutBig", "#Delta_{1,i} Vs #Delta_{2,i} after cut", 120, -6, 6, 120, -6, 6)
     );
-    getStatistics().getHisto2D("DeltaVsDeltaAfterCut")->SetXTitle("#Delta_{1,i} [ns]");
-    getStatistics().getHisto2D("DeltaVsDeltaAfterCut")->SetYTitle("#Delta_{2,i} [ns]");
+    getStatistics().getHisto2D("DeltaVsDeltaAfterCutBig")->SetXTitle("#Delta_{1,i} [ns]");
+    getStatistics().getHisto2D("DeltaVsDeltaAfterCutBig")->SetYTitle("#Delta_{2,i} [ns]");
 
+    getStatistics().createHistogram(
+      new TH2F("DeltaVsDeltaAfterCutSmall", "#Delta_{1,i} Vs #Delta_{2,i} after cut", 120, -6, 6, 120, -6, 6)
+    );
+    getStatistics().getHisto2D("DeltaVsDeltaAfterCutSmall")->SetXTitle("#Delta_{1,i} [ns]");
+    getStatistics().getHisto2D("DeltaVsDeltaAfterCutSmall")->SetYTitle("#Delta_{2,i} [ns]");
 
+    getStatistics().createHistogram(
+      new TH1F("PhiAngleSmall", "Angle between scattering planesSmall", 180, 0.0, 180)
+    );
+    getStatistics().getHisto1D("PhiAngleSmall")->SetXTitle("#varphi [deg]");
+    getStatistics().getHisto1D("PhiAngleSmall")->SetYTitle("Counts");
+
+    getStatistics().createHistogram(
+      new TH1F("PhiAngleR10Small", "Angle between scattering planes around center (R < 10#circ)Small", 180, 0.0, 180)
+    );
+    getStatistics().getHisto1D("PhiAngleR10Small")->SetXTitle("#varphi [deg]");
+    getStatistics().getHisto1D("PhiAngleR10Small")->SetYTitle("Counts");
+
+    getStatistics().createHistogram(
+      new TH1F("PhiAngleR15Small", "Angle between scattering planes around center (R < 15#circ)Small", 180, 0.0, 180)
+    );
+    getStatistics().getHisto1D("PhiAngleR15Small")->SetXTitle("#varphi [deg]");
+    getStatistics().getHisto1D("PhiAngleR15Small")->SetYTitle("Counts");
+
+    getStatistics().createHistogram(
+      new TH1F("PhiAngleR20Small", "Angle between scattering planes around center (R < 20#circ)Small", 180, 0.0, 180)
+    );
+    getStatistics().getHisto1D("PhiAngleR20Small")->SetXTitle("#varphi [deg]");
+    getStatistics().getHisto1D("PhiAngleR20Small")->SetYTitle("Counts");
+
+    getStatistics().createHistogram(
+      new TH1F("PhiAngleR30Small", "Angle between scattering planes around center (R < 30#circ)Small", 180, 0.0, 180)
+    );
+    getStatistics().getHisto1D("PhiAngleR30Small")->SetXTitle("#varphi [deg]");
+    getStatistics().getHisto1D("PhiAngleR30Small")->SetYTitle("Counts");
+
+    // for(int first = 1; first < 4; first++){
+    //   for(int second = 1; second < 4; second++){
+    //     const char* histo_name = Form("DeltaVsDelta%i%i", first, second);
+
+    //     getStatistics().createHistogram(
+    //       new TH2F(histo_name, Form("#Delta_{1,i} Vs #Delta_{2,i}, Layer %i and %i", first, second), 120, -6, 6, 120, -6, 6)
+    //     );
+    //     getStatistics().getHisto2D(histo_name)->SetXTitle("#Delta_{1,i} [ns]");
+    //     getStatistics().getHisto2D(histo_name)->SetYTitle("#Delta_{2,i} [ns]");
+
+    //   }
+    // }
 
     // getStatistics().createHistogram(
     //   new TH1F("DeexAnnihTimeDiff", "Deexcitation-Annihilation Hits Time Difference", 200, -200.0, 200.0)
@@ -409,7 +457,8 @@ JPetEvent EventCategorizerEntanglement::physicsAnalysis(vector<JPetHit> hits)
   if (annihilationHits.getHits().size() > 3) {
 
     JPetHit firstHit, secondHit, firstScatter, secondScatter;
-    bool firstScatterSet = false, secondScatterSet = false;
+    bool firstScatterSetBig = false, secondScatterSetBig = false;
+    bool firstScatterSetSmall = false, secondScatterSetSmall = false;
     vector<int> hitNr;
     TVector3 detectorCenter(0.0, 0.0, 0.0);
 
@@ -510,23 +559,38 @@ JPetEvent EventCategorizerEntanglement::physicsAnalysis(vector<JPetHit> hits)
         int secondHitLayerID = secondHit.getBarrelSlot().getLayer().getID();
         // if(elipse(DeltaFirst/1000, DeltaSecond/1000, 0.5, -2, 0.5, 0.75, -3.14/4) < 1){
         // if((firstHit.getPos() -  annihilationHits.getHits().at(i).getPos()).Mag() > 70 and (secondHit.getPos() -  annihilationHits.getHits().at(i).getPos()).Mag() > 70){
-        if((firstHit.getScintillator().getID() != annihilationHits.getHits().at(i).getScintillator().getID()) && (secondHit.getScintillator().getID() != annihilationHits.getHits().at(i).getScintillator().getID())){
-          getStatistics().getHisto2D(Form("DeltaVsDelta%i%i", firstHitLayerID, secondHitLayerID) )->Fill(DeltaFirst/1000.0, DeltaSecond/1000.0);
+        if((firstHit.getScintillator().getID() != annihilationHits.getHits().at(i).getScintillator().getID()) && \
+          (secondHit.getScintillator().getID() != annihilationHits.getHits().at(i).getScintillator().getID())){
           getStatistics().getHisto2D("DeltaVsDelta")->Fill(DeltaFirst/1000.0, DeltaSecond/1000.0);
 
-          if(EventCategorizerTools::elipseCut(DeltaFirst/1000.0, DeltaSecond/1000.0, 0.392458, -2.57843, 1.45, 0.7, TMath::DegToRad()*55.0)){
+          if(EventCategorizerTools::elipseCut(DeltaFirst/1000.0, DeltaSecond/1000.0, 0.445344, -2.42528, 1.7, 0.7, TMath::DegToRad()*60.0)){
             firstScatter = annihilationHits.getHits().at(i);
             physicEvent.addHit(firstScatter);
-            firstScatterSet = true;
-            getStatistics().getHisto1D("ComptonAngles")->Fill(EventCategorizerTools::calculateScatteringAngle(firstHit, firstScatter));
-            getStatistics().getHisto2D("DeltaVsDeltaAfterCut")->Fill(DeltaFirst/1000.0, DeltaSecond/1000.0);
+            firstScatterSetBig = true;
+            getStatistics().getHisto1D("ComptonAnglesBig")->Fill(EventCategorizerTools::calculateScatteringAngle(firstHit, firstScatter));
+            getStatistics().getHisto2D("DeltaVsDeltaAfterCutBig")->Fill(DeltaFirst/1000.0, DeltaSecond/1000.0);
+
+            if(EventCategorizerTools::elipseCut(DeltaFirst/1000.0, DeltaSecond/1000.0, 0.202429, -2.54194, 1, 0.26, TMath::DegToRad()*50.0) or \
+               EventCategorizerTools::elipseCut(DeltaFirst/1000.0, DeltaSecond/1000.0, 0.42915, -3.18569, 0.75, 0.15, TMath::DegToRad()*50.0)){
+                firstScatterSetSmall = true;
+                getStatistics().getHisto1D("ComptonAnglesSmall")->Fill(EventCategorizerTools::calculateScatteringAngle(firstHit, firstScatter));
+                getStatistics().getHisto2D("DeltaVsDeltaAfterCutSmall")->Fill(DeltaFirst/1000.0, DeltaSecond/1000.0);
+            }
           }
-          if(EventCategorizerTools::elipseCut(DeltaFirst/1000.0, DeltaSecond/1000.0, -2.40664, 0.492093, 1.45, 0.7, TMath::DegToRad()*35.0)){
+
+          if(EventCategorizerTools::elipseCut(DeltaFirst/1000.0, DeltaSecond/1000.0, -2.30769, 0.475791, 1.7, 0.7, TMath::DegToRad()*30.0)){
             secondScatter = annihilationHits.getHits().at(i);
             physicEvent.addHit(secondScatter);
-            secondScatterSet = true;
-            getStatistics().getHisto1D("ComptonAngles")->Fill(EventCategorizerTools::calculateScatteringAngle(secondHit, secondScatter));
-            getStatistics().getHisto2D("DeltaVsDeltaAfterCut")->Fill(DeltaFirst/1000.0, DeltaSecond/1000.0);
+            secondScatterSetBig = true;
+            getStatistics().getHisto1D("ComptonAnglesBig")->Fill(EventCategorizerTools::calculateScatteringAngle(secondHit, secondScatter));
+            getStatistics().getHisto2D("DeltaVsDeltaAfterCutBig")->Fill(DeltaFirst/1000.0, DeltaSecond/1000.0);
+
+            if(EventCategorizerTools::elipseCut(DeltaFirst/1000.0, DeltaSecond/1000.0, -2.375443, 0.27543, 1, 0.26, TMath::DegToRad()*40.0) or \
+               EventCategorizerTools::elipseCut(DeltaFirst/1000.0, DeltaSecond/1000.0, -3.16473518, 0.473518, 0.7, 0.15, TMath::DegToRad()*40.0)){
+                secondScatterSetSmall = true;
+                getStatistics().getHisto1D("ComptonAnglesSmall")->Fill(EventCategorizerTools::calculateScatteringAngle(secondHit, secondScatter));
+                getStatistics().getHisto2D("DeltaVsDeltaAfterCutSmall")->Fill(DeltaFirst/1000.0, DeltaSecond/1000.0);
+            }
           }
         // }
         }
@@ -534,7 +598,7 @@ JPetEvent EventCategorizerEntanglement::physicsAnalysis(vector<JPetHit> hits)
       }
     }
 
-    if((physicEvent.getHits().size() == 4) && firstScatterSet && secondScatterSet){
+    if((physicEvent.getHits().size() == 4) && firstScatterSetBig && secondScatterSetBig){
       TVector3 AnnihilationPoint = EventCategorizerTools::calculateAnnihilationPoint(firstHit, secondHit);
 
       TVector3 FirstMomentum = firstHit.getPos() - AnnihilationPoint;
@@ -545,26 +609,26 @@ JPetEvent EventCategorizerEntanglement::physicsAnalysis(vector<JPetHit> hits)
       double Theta1 = EventCategorizerTools::calculateScatteringAngle(firstHit, firstScatter);
       double Theta2 = EventCategorizerTools::calculateScatteringAngle(secondHit, secondScatter);
 
-      getStatistics().getHisto2D("ThetaVsTheta")->Fill(Theta1, Theta2);
+      getStatistics().getHisto2D("ThetaVsThetaBig")->Fill(Theta1, Theta2);
 
       TVector3 Orthogonal1 = FirstMomentum.Cross(FirstScatteredMomentum);
       TVector3 Orthogonal2 = SecondMomentum.Cross(SecondScatteredMomentum);
 
       double AngleBetweenPlanes = 180*(Orthogonal1.Angle(Orthogonal2))/TMath::Pi();
 
-      getStatistics().getHisto1D("PhiAngle")->Fill(AngleBetweenPlanes);
+      getStatistics().getHisto1D("PhiAngleBig")->Fill(AngleBetweenPlanes);
 
       if( (pow(Theta1 - 81.66, 2) + pow(Theta2 - 81.66, 2)) < pow(30,2)) {
-        getStatistics().getHisto1D("PhiAngleR30")->Fill(AngleBetweenPlanes);
+        getStatistics().getHisto1D("PhiAngleR30Big")->Fill(AngleBetweenPlanes);
 
         if( (pow(Theta1 - 81.66, 2) + pow(Theta2 - 81.66, 2)) < pow(20,2)) {
-        getStatistics().getHisto1D("PhiAngleR20")->Fill(AngleBetweenPlanes);
+        getStatistics().getHisto1D("PhiAngleR20Big")->Fill(AngleBetweenPlanes);
 
         if( (pow(Theta1 - 81.66, 2) + pow(Theta2 - 81.66, 2)) < pow(15,2)) {
-        getStatistics().getHisto1D("PhiAngleR15")->Fill(AngleBetweenPlanes);
+        getStatistics().getHisto1D("PhiAngleR15Big")->Fill(AngleBetweenPlanes);
 
         if( (pow(Theta1 - 81.66, 2) + pow(Theta2 - 81.66, 2)) < pow(10,2)) {
-        getStatistics().getHisto1D("PhiAngleR10")->Fill(AngleBetweenPlanes);
+        getStatistics().getHisto1D("PhiAngleR10Big")->Fill(AngleBetweenPlanes);
 
         }
         }
@@ -572,6 +636,29 @@ JPetEvent EventCategorizerEntanglement::physicsAnalysis(vector<JPetHit> hits)
         }
       }
 
+      if(firstScatterSetSmall && secondScatterSetSmall){
+        getStatistics().getHisto1D("PhiAngleSmall")->Fill(AngleBetweenPlanes);
+        getStatistics().getHisto2D("ThetaVsThetaSmall")->Fill(Theta1, Theta2);
+
+      if( (pow(Theta1 - 81.66, 2) + pow(Theta2 - 81.66, 2)) < pow(30,2)) {
+        getStatistics().getHisto1D("PhiAngleR30Small")->Fill(AngleBetweenPlanes);
+
+        if( (pow(Theta1 - 81.66, 2) + pow(Theta2 - 81.66, 2)) < pow(20,2)) {
+        getStatistics().getHisto1D("PhiAngleR20Small")->Fill(AngleBetweenPlanes);
+
+        if( (pow(Theta1 - 81.66, 2) + pow(Theta2 - 81.66, 2)) < pow(15,2)) {
+        getStatistics().getHisto1D("PhiAngleR15Small")->Fill(AngleBetweenPlanes);
+
+        if( (pow(Theta1 - 81.66, 2) + pow(Theta2 - 81.66, 2)) < pow(10,2)) {
+        getStatistics().getHisto1D("PhiAngleR10Small")->Fill(AngleBetweenPlanes);
+
+        }
+        }
+
+        }
+      }
+
+      }
 
     }
 
