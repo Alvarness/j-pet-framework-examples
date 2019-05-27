@@ -197,61 +197,61 @@ bool EventCategorizerEntanglement::init()
     getStatistics().getHisto2D("BTBhitsVsAnnihilation")->SetYTitle("Number of Annihilation Hits in a Event");
 
     getStatistics().createHistogram(
-      new TH2F("DeltaVsDelta", "#Delta_{1,i} Vs #Delta_{2,i}", 120, -6, 6, 120, -6, 6)
+      new TH2F("DeltaVsDelta", "#Delta_{1,i} Vs #Delta_{2,i}", 1200, -6, 6, 1200, -6, 6)
     );
     getStatistics().getHisto2D("DeltaVsDelta")->SetXTitle("#Delta_{1,i} [ns]");
     getStatistics().getHisto2D("DeltaVsDelta")->SetYTitle("#Delta_{2,i} [ns]");
 
     getStatistics().createHistogram(
-      new TH1F("ComptonAnglesBig", "Compton scattering angles", 180, 0.0, 180)
+      new TH1F("ComptonAnglesBig", "Compton scattering angles", 1800, 0.0, 180)
     );
     getStatistics().getHisto1D("ComptonAnglesBig")->SetXTitle("#varphi [deg]");
     getStatistics().getHisto1D("ComptonAnglesBig")->SetYTitle("Counts");
 
     getStatistics().createHistogram(
-      new TH1F("ComptonAnglesSmall", "Compton scattering angles", 180, 0.0, 180)
+      new TH1F("ComptonAnglesSmall", "Compton scattering angles", 1800, 0.0, 180)
     );
     getStatistics().getHisto1D("ComptonAnglesSmall")->SetXTitle("#varphi [deg]");
     getStatistics().getHisto1D("ComptonAnglesSmall")->SetYTitle("Counts");
 
     getStatistics().createHistogram(
-      new TH1F("PhiAngleBig", "Angle between scattering planes", 180, 0.0, 180)
+      new TH1F("PhiAngleBig", "Angle between scattering planes", 1800, 0.0, 180)
     );
     getStatistics().getHisto1D("PhiAngleBig")->SetXTitle("#varphi [deg]");
     getStatistics().getHisto1D("PhiAngleBig")->SetYTitle("Counts");
 
     getStatistics().createHistogram(
-      new TH1F("PhiAngleR10Big", "Angle between scattering planes around center (R < 10#circ)", 180, 0.0, 180)
+      new TH1F("PhiAngleR10Big", "Angle between scattering planes around center (R < 10#circ)", 1800, 0.0, 180)
     );
     getStatistics().getHisto1D("PhiAngleR10Big")->SetXTitle("#varphi [deg]");
     getStatistics().getHisto1D("PhiAngleR10Big")->SetYTitle("Counts");
 
     getStatistics().createHistogram(
-      new TH1F("PhiAngleR15Big", "Angle between scattering planes around center (R < 15#circ)", 180, 0.0, 180)
+      new TH1F("PhiAngleR15Big", "Angle between scattering planes around center (R < 15#circ)", 1800, 0.0, 180)
     );
     getStatistics().getHisto1D("PhiAngleR15Big")->SetXTitle("#varphi [deg]");
     getStatistics().getHisto1D("PhiAngleR15Big")->SetYTitle("Counts");
 
     getStatistics().createHistogram(
-      new TH1F("PhiAngleR20Big", "Angle between scattering planes around center (R < 20#circ)", 180, 0.0, 180)
+      new TH1F("PhiAngleR20Big", "Angle between scattering planes around center (R < 20#circ)", 1800, 0.0, 180)
     );
     getStatistics().getHisto1D("PhiAngleR20Big")->SetXTitle("#varphi [deg]");
     getStatistics().getHisto1D("PhiAngleR20Big")->SetYTitle("Counts");
 
     getStatistics().createHistogram(
-      new TH1F("PhiAngleR30Big", "Angle between scattering planes around center (R < 30#circ)", 180, 0.0, 180)
+      new TH1F("PhiAngleR30Big", "Angle between scattering planes around center (R < 30#circ)", 1800, 0.0, 180)
     );
     getStatistics().getHisto1D("PhiAngleR30Big")->SetXTitle("#varphi [deg]");
     getStatistics().getHisto1D("PhiAngleR30Big")->SetYTitle("Counts");
 
     getStatistics().createHistogram(
-      new TH2F("ThetaVsThetaBig", "ThetaVsTheta", 201, -0.5, 200.5, 201, -0.5, 200.5)
+      new TH2F("ThetaVsThetaBig", "ThetaVsTheta", 2001, -0.5, 200.5, 2001, -0.5, 200.5)
     );
     getStatistics().getHisto2D("ThetaVsThetaBig")->SetXTitle("First photon Compton scattering angle [deg]");
     getStatistics().getHisto2D("ThetaVsThetaBig")->SetYTitle("Second photon Compton scattering angle [deg]");
 
     getStatistics().createHistogram(
-      new TH2F("ThetaVsThetaSmall", "ThetaVsTheta", 201, -0.5, 200.5, 201, -0.5, 200.5)
+      new TH2F("ThetaVsThetaSmall", "ThetaVsTheta", 2001, -0.5, 200.5, 2001, -0.5, 200.5)
     );
     getStatistics().getHisto2D("ThetaVsThetaSmall")->SetXTitle("First photon Compton scattering angle [deg]");
     getStatistics().getHisto2D("ThetaVsThetaSmall")->SetYTitle("Second photon Compton scattering angle [deg]");
@@ -266,43 +266,43 @@ bool EventCategorizerEntanglement::init()
 
 
     getStatistics().createHistogram(
-      new TH2F("DeltaVsDeltaAfterCutBig", "#Delta_{1,i} Vs #Delta_{2,i} after cut", 120, -6, 6, 120, -6, 6)
+      new TH2F("DeltaVsDeltaAfterCutBig", "#Delta_{1,i} Vs #Delta_{2,i} after cut", 1200, -6, 6, 1200, -6, 6)
     );
     getStatistics().getHisto2D("DeltaVsDeltaAfterCutBig")->SetXTitle("#Delta_{1,i} [ns]");
     getStatistics().getHisto2D("DeltaVsDeltaAfterCutBig")->SetYTitle("#Delta_{2,i} [ns]");
 
     getStatistics().createHistogram(
-      new TH2F("DeltaVsDeltaAfterCutSmall", "#Delta_{1,i} Vs #Delta_{2,i} after cut", 120, -6, 6, 120, -6, 6)
+      new TH2F("DeltaVsDeltaAfterCutSmall", "#Delta_{1,i} Vs #Delta_{2,i} after cut", 1200, -6, 6, 1200, -6, 6)
     );
     getStatistics().getHisto2D("DeltaVsDeltaAfterCutSmall")->SetXTitle("#Delta_{1,i} [ns]");
     getStatistics().getHisto2D("DeltaVsDeltaAfterCutSmall")->SetYTitle("#Delta_{2,i} [ns]");
 
     getStatistics().createHistogram(
-      new TH1F("PhiAngleSmall", "Angle between scattering planesSmall", 180, 0.0, 180)
+      new TH1F("PhiAngleSmall", "Angle between scattering planesSmall", 1800, 0.0, 180)
     );
     getStatistics().getHisto1D("PhiAngleSmall")->SetXTitle("#varphi [deg]");
     getStatistics().getHisto1D("PhiAngleSmall")->SetYTitle("Counts");
 
     getStatistics().createHistogram(
-      new TH1F("PhiAngleR10Small", "Angle between scattering planes around center (R < 10#circ)Small", 180, 0.0, 180)
+      new TH1F("PhiAngleR10Small", "Angle between scattering planes around center (R < 10#circ)Small", 1800, 0.0, 180)
     );
     getStatistics().getHisto1D("PhiAngleR10Small")->SetXTitle("#varphi [deg]");
     getStatistics().getHisto1D("PhiAngleR10Small")->SetYTitle("Counts");
 
     getStatistics().createHistogram(
-      new TH1F("PhiAngleR15Small", "Angle between scattering planes around center (R < 15#circ)Small", 180, 0.0, 180)
+      new TH1F("PhiAngleR15Small", "Angle between scattering planes around center (R < 15#circ)Small", 1800, 0.0, 180)
     );
     getStatistics().getHisto1D("PhiAngleR15Small")->SetXTitle("#varphi [deg]");
     getStatistics().getHisto1D("PhiAngleR15Small")->SetYTitle("Counts");
 
     getStatistics().createHistogram(
-      new TH1F("PhiAngleR20Small", "Angle between scattering planes around center (R < 20#circ)Small", 180, 0.0, 180)
+      new TH1F("PhiAngleR20Small", "Angle between scattering planes around center (R < 20#circ)Small", 1800, 0.0, 180)
     );
     getStatistics().getHisto1D("PhiAngleR20Small")->SetXTitle("#varphi [deg]");
     getStatistics().getHisto1D("PhiAngleR20Small")->SetYTitle("Counts");
 
     getStatistics().createHistogram(
-      new TH1F("PhiAngleR30Small", "Angle between scattering planes around center (R < 30#circ)Small", 180, 0.0, 180)
+      new TH1F("PhiAngleR30Small", "Angle between scattering planes around center (R < 30#circ)Small", 1800, 0.0, 180)
     );
     getStatistics().getHisto1D("PhiAngleR30Small")->SetXTitle("#varphi [deg]");
     getStatistics().getHisto1D("PhiAngleR30Small")->SetYTitle("Counts");

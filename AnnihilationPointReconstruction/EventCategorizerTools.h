@@ -57,6 +57,9 @@ public:
                            bool saveHistos, double b2bSlotThetaDiff, double b2bTimeDiff);
   static bool stream3Gamma(const JPetEvent& event, JPetStatistics& stats,
                            bool saveHistos, double d3SlotThetaMin, double d3TimeDiff, double d3DistanceFromCenter);
+  static double LORDistance(const JPetHit& firstHit, const JPetHit& secondHit);
+  static double DeltaAngle(const JPetHit& firstHit, const JPetHit& secondHit);
+
 };
 
 #endif /* !EVENTCATEGORIZERTOOLS_H */

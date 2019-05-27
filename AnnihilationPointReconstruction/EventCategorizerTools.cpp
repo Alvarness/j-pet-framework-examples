@@ -372,3 +372,24 @@ bool EventCategorizerTools::stream3Gamma(
   }
   return false;
 }
+
+double EventCategorizerTools::LORDistance(const JPetHit& firstHit, const JPetHit& secondHit)
+{
+  double x_a = firstHit.getPosX();
+  double x_b = secondHit.getPosX();
+
+  double y_a = firstHit.getPosY();
+  double y_b = secondHit.getPosY();
+
+  double a = (y_a - y_b)/(x_a - x_b);
+  double b = 1.0;
+  double c = y_a - ((y_a - y_b)/(x_a - x_b))*x_a;
+
+  double distance = fabs(c)/sqrt(a*a + b*b);
+  return distance;
+}
+
+double EventCategorizerTools::DeltaAngle(const JPetHit& firstHit, const JPetHit& secondHit){
+
+  return fabs(firstHit.getBarrelSlot().getTheta() - secondHit.getBarrelSlot().getTheta());
+}

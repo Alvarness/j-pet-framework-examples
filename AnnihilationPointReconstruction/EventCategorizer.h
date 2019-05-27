@@ -58,5 +58,7 @@ protected:
 	double fDeexTOTCutMax = 50000.0;
 	bool fSaveControlHistos = true;
 	void initialiseHistograms();
+
+	std::ofstream outputFile;
 };
 #endif /* !EVENTCATEGORIZER_H */
